@@ -1,0 +1,121 @@
+# Crypto AI Agent
+
+An AI agent for cryptocurrency information powered by Groq's Kimi2 model, using Langchain for orchestration, Binance API for real-time data, and a vector database for knowledge retrieval.
+
+## Features
+
+- **Chat-based UI**: Natural language interface for asking questions about cryptocurrencies
+- **Binance API Integration**: Real-time price and market data
+- **Knowledge Base**: Vector database for storing and retrieving cryptocurrency information
+- **Groq Kimi2 Integration**: Powerful LLM for understanding and responding to queries
+- **Langchain Agent Orchestration**: Intelligent routing of queries to appropriate tools
+
+## Architecture
+
+The system consists of the following components:
+
+1. **API Layer**: FastAPI endpoints for chat and knowledge base management
+2. **Agent Layer**: LangChain agent orchestration with Groq Kimi2 model
+3. **Tools Layer**: 
+   - Binance API tool for real-time market data
+   - Knowledge Base tool for general crypto information
+4. **Knowledge Base Layer**: Vector database for storing and retrieving information
+5. **Embedding Layer**: Sentence transformers for creating embeddings
+
+## Getting Started
+
+### Prerequisites
+
+- Python 3.9+
+- Groq API key
+- Binance API credentials (optional, for real-time price data)
+
+### Installation
+
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/yourusername/crypto-ai-agent.git
+   cd crypto-ai-agent
+   ```
+
+2. Create a virtual environment:
+   ```bash
+   python -m venv venv
+   source venv/bin/activate  # On Windows: venv\Scripts\activate
+   ```
+
+3. Install dependencies:
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+4. Set up environment variables:
+   ```bash
+   cp .env.example .env
+   # Edit .env file with your API keys and settings
+   ```
+
+### Usage
+
+1. Populate the knowledge base:
+   ```bash
+   python scripts/ingest_knowledge.py --directory /path/to/documents --reset
+   ```
+
+2. Run the API server:
+   ```bash
+   python main.py
+   ```
+
+3. Test the agent interactively:
+   ```bash
+   python scripts/test_agent.py
+   ```
+
+4. Access the API at `http://localhost:8000/`
+
+## API Endpoints
+
+- `GET /health`: Health check endpoint
+- `POST /chat`: Process chat messages
+  ```json
+  {
+    "message": "What is the current price of Bitcoin?",
+    "session_id": "optional-session-id"
+  }
+  ```
+- `POST /knowledge-base/ingest`: Ingest documents into the knowledge base
+  ```json
+  {
+    "directory": "/path/to/documents",
+    "chunk_size": 1000,
+    "chunk_overlap": 200,
+    "reset": false
+  }
+  ```
+
+## Knowledge Base
+
+The knowledge base can be populated with various document types:
+- Markdown files (.md)
+- Text files (.txt)
+- CSV files (.csv)
+- JSON files (.json)
+
+Place your documents in the `data/knowledge_base` directory (or configure a different location in `.env`).
+
+## Customization
+
+- **Vector Database**: Configure in `.env` to use Chroma, Qdrant, or Pinecone
+- **Embedding Model**: Change the model in `.env` (default is `sentence-transformers/all-MiniLM-L6-v2`)
+- **LLM Model**: Configure the Groq model in `.env`
+
+## License
+
+[MIT License](LICENSE)
+
+## Acknowledgements
+
+- [Groq](https://groq.com/) for the Kimi2 LLM
+- [Langchain](https://www.langchain.com/) for the agent framework
+- [Binance](https://binance.com/) for the cryptocurrency API
