@@ -22,7 +22,6 @@ def get_llm(model_name: Optional[str] = None) -> BaseChatModel:
     # Validate and map model names
     valid_models = {
         "kimi2": "moonshotai/kimi-k2-instruct",
-        "mixtral": "mixtral-8x7b-32768", 
         "llama3": "llama3-8b-8192",
         "llama3-70b": "llama3-70b-8192",
         "gemma": "gemma-7b-it"

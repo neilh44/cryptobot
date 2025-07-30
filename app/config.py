@@ -18,7 +18,7 @@ class Settings(BaseSettings):
     
     # LLM Settings
     GROQ_API_KEY: Optional[str] = None
-    KIMI2_MODEL: str = "mixtral-8x7b-32768"
+    KIMI2_MODEL: str = "moonshotai/kimi-k2-instruct"
     
     # Binance API Settings
     BINANCE_API_KEY: Optional[str] = None
