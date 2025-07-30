@@ -12,6 +12,7 @@ from langchain_core.tools import BaseTool
 from app.agent.llm import get_llm
 from app.agent.tools.binance_tool import BinancePriceTool
 from app.agent.tools.kb_tool import KnowledgeBaseTool
+from app.agent.tools.rejection_tool import RejectionTool
 from app.agent.prompts import SYSTEM_PROMPT
 from app.config import settings
 
@@ -26,19 +27,39 @@ class CryptoAgent:
         self.tools = self._initialize_tools()
         self.agent_executor = self._create_agent_executor()
         self.memory = []  # Simple list to store conversation history
+
         
     def _initialize_tools(self) -> List[BaseTool]:
         """Initialize and return the tools used by the agent."""
+        tools = []
+        
         try:
-            tools = [
-                BinancePriceTool(),
-                KnowledgeBaseTool()
-            ]
-            return tools
+            binance_tool = BinancePriceTool()
+            tools.append(binance_tool)
+            print(f"✅ Successfully initialized: {binance_tool.name}")
         except Exception as e:
-            print(f"Error initializing tools: {e}")
-            # Return empty list if tools can't be initialized
-            return []
+            print(f"❌ Failed to initialize BinancePriceTool: {e}")
+        
+        try:
+            kb_tool = KnowledgeBaseTool()
+            tools.append(kb_tool)
+            print(f"✅ Successfully initialized: {kb_tool.name}")
+        except Exception as e:
+            print(f"❌ Failed to initialize KnowledgeBaseTool: {e}")
+        
+        try:
+            rejection_tool = RejectionTool()
+            tools.append(rejection_tool)
+            print(f"✅ Successfully initialized: {rejection_tool.name}")
+        except Exception as e:
+            print(f"❌ Failed to initialize RejectionTool: {e}")
+        
+        print(f"📋 Total tools initialized: {len(tools)}")
+        for tool in tools:
+            print(f"  - {tool.name}: {tool.description[:100]}...")
+        
+        return tools
+        
     
     def _create_agent_executor(self) -> AgentExecutor:
         """Create and return the LangChain agent executor."""
@@ -56,7 +77,8 @@ class CryptoAgent:
             agent=agent,
             tools=self.tools,
             verbose=True,
-            handle_parsing_errors=True
+            handle_parsing_errors=True,
+            return_intermediate_steps=True
         )
     
     def _update_memory(self, user_input: str, assistant_response: str):
