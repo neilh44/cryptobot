@@ -2,9 +2,10 @@
 Crypto AI Agent - Main Application Entry Point
 This module initializes and runs the FastAPI application.
 """
+import os
 import uvicorn
 from fastapi import FastAPI
-from fastapi.middleware.cors import CORSMiddleware  # Add this import
+from fastapi.middleware.cors import CORSMiddleware
 from app.api.endpoints import router
 from app.config import settings
 
@@ -26,9 +27,11 @@ app.add_middleware(
 app.include_router(router)
 
 if __name__ == "__main__":
+    # Use PORT environment variable provided by Render
+    port = int(os.environ.get("PORT", settings.PORT))
     uvicorn.run(
         "main:app",
-        host=settings.HOST,
-        port=settings.PORT,
+        host="0.0.0.0",  # Required for Render - bind to all interfaces
+        port=port,       # Use dynamic port from Render
         reload=settings.DEBUG
     )
